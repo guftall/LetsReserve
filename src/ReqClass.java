@@ -56,6 +56,8 @@ public class ReqClass {
 	public static String Cookie = "";
 	private String CaptchaControl1 = "";
 	
+	private String weekTarikhShanbe = "";
+	
 	//private String Origin = "http://self.pgu.ac.ir";
 	//private String Referer = "http://self.pgu.ac.ir/login.aspx";
 	
@@ -339,7 +341,7 @@ public class ReqClass {
 			conn.disconnect();
 			
 			setViewStateAndEValidationToFields(response.toString());
-
+			weekTarikhShanbe = Jsoup.parse(response.toString()).getElementById("D1").text();
 			try {
 			org.jsoup.nodes.Document doc = Jsoup.parse(response.toString());
 			Element lblMessage = doc.getElementById("LbMsg");
