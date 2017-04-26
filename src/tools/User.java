@@ -2,7 +2,7 @@ package tools;
 
 public class User {
 
-	private String Name;
+	private String name;
 	private String txtUsername;
 	private String txtPassword;
 	
@@ -13,13 +13,22 @@ public class User {
 	}
 	
 	public String getName() {
-		return Name;
+		return name;
 	}
 	public String getTxtUsername() {
 		return txtUsername;
 	}
 	public String getTxtPassword() {
 		return txtPassword;
+	}
+	
+	@Override
+	public String toString() {
+		String reString = "Name: "+ name + "\n";
+		reString += "Username : "+ txtUsername + "\n";
+		reString += "Password : "+ txtPassword;
+		
+		return reString;
 	}
 	
 }

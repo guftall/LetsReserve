@@ -553,6 +553,8 @@ public class ReqClass {
 				ghaza.value = element.val();
 				ghaza.description = "#bug1";
 				resGhazas.add(new Ghaza());
+				if(!element.attr("disabled").startsWith("disab")  || ghaza.nameId.startsWith("Ghaza"))
+					ghaza.enable = true;
 			}
 			
 		}
@@ -603,6 +605,7 @@ public class ReqClass {
 
         for(Ghaza ghza : selectedGhazas) {
         	rEStringBuilder.append(ghza.nameId+ "="+ ghza.value+ "&");
+        	//if(ghaza.enable)
         }
 
         rEStringBuilder.append("RD_Self=1");
