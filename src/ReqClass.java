@@ -495,10 +495,16 @@ public class ReqClass {
    
 	}
 	
+	private void getNewCookieIfNotValid() throws Exception {
 		
-	}
-
+		this.Cookie = utilityClass.readCookie();
+		if(!CookieIsValid()) {
+			org.jsoup.nodes.Document response = sendGet(new URL("http://self.pgu.ac.ir/login.aspx"));
+			String captchaUrl = response.getElementById("Panel1").child(3).child(0).child(0).attr("src").toString();
 			
+
+			// Get image
+			loadCaptchaImage("http://self.pgu.ac.ir/"+ captchaUrl);
 			
 			if(inBufferedReader != null)
 
