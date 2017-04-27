@@ -500,17 +500,7 @@ public class ReqClass {
 
 			
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		finally {
 			if(inBufferedReader != null)
-				inBufferedReader.close();
-		}
-		
-		System.out.println("Cookie is: "+ Cookie);
-		
-	}
 
 	private void getNewCookieIfNotValid() throws Exception {
 		
@@ -624,4 +614,93 @@ public class ReqClass {
 	
 	
 	
+	private org.jsoup.nodes.Document sendGet(URL url) throws Exception {
+		
+		
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+
+		if(Cookie != "")
+			conn.setRequestProperty("Cookie", Cookie);
+		//setRequestHeaders(conn);
+
+		int responseCode = conn.getResponseCode();
+
+		System.out.println("GET Response Code("+ url.getHost()+ ") is: "+ responseCode);
+		
+		//if(responseCode == 200) {
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(conn.getInputStream(), "UTF-8"));
+		
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+		
+		while((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		if(in != null)
+			in.close();
+		conn.disconnect();
+		
+		 
+		org.jsoup.nodes.Document doc = Jsoup.parse(response.toString());
+		setViewStateAndEValidationToFields(doc);
+		//setViewStateAndEValidationToFields(response.toString());
+		//weekTarikhShanbe = Jsoup.parse(response.toString()).getElementById("D1").text();
+	
+		
+		return doc;
+		//}
+		
+		
+	}
+	
+	private int sendGet(String targetUrl) throws Exception {
+		
+		URL url = new URL(targetUrl);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+
+		if(Cookie != "")
+			conn.setRequestProperty("Cookie", Cookie);
+		//setRequestHeaders(conn);
+
+		return conn.getResponseCode();
+	}
+
+	private String getAllFormDataForLogin() throws Exception {
+
+		StringBuilder tokenUri=new StringBuilder("");
+
+        tokenUri.append("__LASTFOCUS=");
+        tokenUri.append(URLEncoder.encode("","UTF-8"));
+        tokenUri.append("&__EVENTTARGET=");
+        tokenUri.append(URLEncoder.encode(__EVENTTARGET,"UTF-8"));
+
+        tokenUri.append("&__EVENTARGUMENT=");
+        tokenUri.append(URLEncoder.encode("","UTF-8"));
+
+        tokenUri.append("&__VIEWSTATE=");
+        tokenUri.append(URLEncoder.encode(__VIEWSTATE,"UTF-8"));
+        
+        tokenUri.append("&__VIEWSTATEENCRYPTED=");
+        tokenUri.append(URLEncoder.encode("","UTF-8"));
+
+        tokenUri.append("&__EVENTVALIDATION=");
+        tokenUri.append(URLEncoder.encode(__EVENTVALIDATION,"UTF-8"));
+	    
+        tokenUri.append("&txtusername=");
+        tokenUri.append(URLEncoder.encode(user.getTxtUsername(),"UTF-8"));
+        
+        tokenUri.append("&txtpassword=");
+        tokenUri.append(URLEncoder.encode(user.getTxtPassword(),"UTF-8"));
+
+	    tokenUri.append("&CaptchaControl1=");
+        tokenUri.append(URLEncoder.encode(CaptchaControl1,"UTF-8"));
+
+        tokenUri.append("&btnlogin=");
+        tokenUri.append(URLEncoder.encode("تآیید","UTF-8"));
+        
+        return tokenUri.toString();
+	}
 }
