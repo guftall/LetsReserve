@@ -342,6 +342,9 @@ public class ReqClass {
 			
 			setViewStateAndEValidationToFields(response.toString());
 			weekTarikhShanbe = Jsoup.parse(response.toString()).getElementById("D1").text();
+			System.out.println(weekTarikhShanbe);
+
+			
 			try {
 			org.jsoup.nodes.Document doc = Jsoup.parse(response.toString());
 			Element lblMessage = doc.getElementById("LbMsg");
@@ -388,15 +391,14 @@ public class ReqClass {
 		
 		
 
-		String dataTest = tokenUri.toString();
-		con.setFixedLengthStreamingMode(dataTest.getBytes("UTF-8").length);
-		System.out.println(dataTest);
+		String data = tokenUri.toString();
+		con.setFixedLengthStreamingMode(data.getBytes("UTF-8").length);
 		con.setDoOutput(true);
 		
 		
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(con.getOutputStream(),"UTF-8");
 		
-		outputStreamWriter.write(dataTest.toString());
+		outputStreamWriter.write(data.toString());
         con.setInstanceFollowRedirects(false);
         outputStreamWriter.flush();
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
@@ -416,7 +418,7 @@ public class ReqClass {
 	
 				in.close();
 				org.jsoup.nodes.Document doc = Jsoup.parse(response1.toString());
-				System.out.println(response1.toString());
+
 				System.out.println(doc.getElementById("LbMsg").text());
 		
 			}
@@ -481,7 +483,7 @@ public class ReqClass {
 	
 				in.close();
 				org.jsoup.nodes.Document doc = Jsoup.parse(response1.toString());
-				System.out.println(response1.toString());
+
 				System.out.println(doc.getElementById("LbMsg").text());
 		
 			}
@@ -575,7 +577,7 @@ public class ReqClass {
 			ghazaList.getAllGhazas().remove(0);
 		
 		org.jsoup.select.Elements elements = document.getElementsByTag("input");
-		System.out.println(elements.size());
+
 		for(Element element : elements) {
 			if(element.attr("name").startsWith("Hid") || element.attr("name").startsWith("Edit") ||
 					element.attr("name").contains("Ghaza"))
@@ -595,7 +597,6 @@ public class ReqClass {
 			}
 			
 		}
-		System.out.println(ghazaList.getAllGhazas().size());
 	}
 	
 	private void setViewStateAndEValidationToFields(String string) throws Exception {
