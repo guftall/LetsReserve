@@ -44,16 +44,15 @@ public class ReqClass {
 	private UtilityClass utilityClass = new UtilityClass();
 	private GhazaList ghazaList = new GhazaList();
 	
-	private String selfUrl = "http://self.pgu.ac.ir/";
 
 	private User user;
 	
 	private final String Host = "self.pgu.ac.ir";
 	
-	private static String __VIEWSTATE = "";
-	private static String __EVENTVALIDATION = "";
+	private String __VIEWSTATE = "";
+	private String __EVENTVALIDATION = "";
 	private String __EVENTTARGET = "";
-	public static String Cookie = "";
+	public String Cookie = "";
 	private String CaptchaControl1 = "";
 	
 	private String weekTarikhShanbe = "";
@@ -62,15 +61,14 @@ public class ReqClass {
 	//private String Referer = "http://self.pgu.ac.ir/login.aspx";
 	
 	
-	public ReqClass(User user, boolean makeNewCookie){
+	public ReqClass(User user){
 		this.user = user;
-		try {
-			if(makeNewCookie)
-				getNewCookieIfNotValid();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
+	
+	
+	
+	
+	
 	
 
 	public String getTxtusername() {
@@ -80,6 +78,16 @@ public class ReqClass {
 	public String getTxtpassword() {
 		return this.user.getTxtPassword();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void LoginToSelf() throws Exception {
 
@@ -91,19 +99,19 @@ public class ReqClass {
 		utilityClass.imgUrlToLoad = imgUrl;
 		new Thread(utilityClass).start();
 		
-		setRequestHeaders(con);
 
 		this.CaptchaControl1 = JOptionPane.showInputDialog("Please input Image Numbers: ");
 		
 		utilityClass.frame.setVisible(false);
 		utilityClass.frame.dispose();
 	}
-
+	
 	
 	public void nextWeekBtn() throws Exception {
 		
 		getNewCookieIfNotValid();
-		SendGetToReserve();
+		//SendGetToReserve();
+		String targetUrl = "http://self.pgu.ac.ir/Reserve.aspx";
 		
 		URL url = new URL(targetUrl);
 
@@ -114,79 +122,13 @@ public class ReqClass {
 			System.out.println(htmlRes.getElementById("D1").text());
 				
 				
-			}catch (Exception e) {
-			
-			}
-				
 	}
 	
 	
-	private String getImageCaptcha() {
-
-        String test1= JOptionPane.showInputDialog("Please input Image Numbers: ");
-
-		return test1;
-		
-	}
-	
-	private String SendGetToReserve() throws Exception {
-		
-
-		URL obj = new URL(selfUrl + "Reserve.aspx");
-		HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-		
-		conn.setRequestMethod("GET");
-		
-		setRequestHeaders(conn);
-		
-		conn.setRequestProperty("Referer", "http://self.pgu.ac.ir/");
-		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.8,fa;q=0.6,la;q=0.4");
-		
-		conn.setRequestProperty("Cookie", Cookie);
-		
-		int responseCode = conn.getResponseCode();
-		System.out.println("Response Code(GET - /Reserve.aspx) is: "+ responseCode);
-		
-		if(responseCode == 200) {
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(conn.getInputStream(), "UTF-8"));
-			
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-			
-			while((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			if(in != null)
-				in.close();
-			conn.disconnect();
-			
-			setViewStateAndEValidationToFields(response.toString());
-			weekTarikhShanbe = Jsoup.parse(response.toString()).getElementById("D1").text();
-			System.out.println(weekTarikhShanbe);
-
-			
-			try {
-			org.jsoup.nodes.Document doc = Jsoup.parse(response.toString());
-			Element lblMessage = doc.getElementById("LbMsg");
-			System.out.println(lblMessage.text());
-			}
-			catch (Exception e) {
-				throw new MyException("Cookie is not Valid");
-			}
-
-			getSelectedGhazas(Jsoup.parse(response.toString()));
-			return response.toString();
-		}
-
-		return "Error. Response code is : "+ responseCode;
-		
-	}
-
 	public void TaideReserveGhaza() throws Exception {
 		
 		getNewCookieIfNotValid();
-		SendGetToReserve();
+		//SendGetToReserve();
 
 
         StringBuilder tokenUri = setFormDataForPostReserve();
@@ -327,22 +269,23 @@ public class ReqClass {
 			// Get image
 			loadCaptchaImage("http://self.pgu.ac.ir/"+ captchaUrl);
 			
-			if(inBufferedReader != null)
 
 			
 	        
 			sendPost(new URL("http://self.pgu.ac.ir/login.aspx"), getAllFormDataForLogin());
 			System.out.println("New Cookie is: "+ Cookie);
-			saveCookie();
+			utilityClass.saveCookie(Cookie);
 		}
 		
 	}
 	
 	private boolean CookieIsValid() throws Exception {
 		try {
-			String getRes =
-			SendGetToReserve();
-			if(getRes.startsWith("Error")) {
+			org.jsoup.nodes.Document getRes  = sendGet(new URL("http://self.pgu.ac.ir/ChangePass.aspx"));
+			if(getRes.getElementById("lblmessage") == null) {
+				return true;
+			}
+			else {
 				System.out.println(getRes);
 				return false;
 			}
@@ -350,9 +293,6 @@ public class ReqClass {
 			if(e.msg.startsWith("Cookie"));
 			return false;
 		}
-		
-		
-		return true;
 	}
 
 	
@@ -361,9 +301,8 @@ public class ReqClass {
 		
 	}
 	
-	private void setViewStateAndEValidationToFields(String string) throws Exception {
+	private void setViewStateAndEValidationToFields(org.jsoup.nodes.Document doc) throws Exception {
 
-		org.jsoup.nodes.Document doc = Jsoup.parse(string);
 		// Set __VIEWSTATE
 		__VIEWSTATE = doc.getElementById("__VIEWSTATE").val();
 		
@@ -410,6 +349,9 @@ public class ReqClass {
 		
 		return rEStringBuilder;
 	}
+	
+	
+	
 	
 	
 	
@@ -464,6 +406,7 @@ public class ReqClass {
 		return html;
 		
 	}
+
 	private org.jsoup.nodes.Document sendGet(URL url) throws Exception {
 		
 		
@@ -553,6 +496,8 @@ public class ReqClass {
         
         return tokenUri.toString();
 	}
+
+
 	private String getAllFormDataForSubmitReserve(org.jsoup.nodes.Document reserveGetResponse, boolean setBtn_Taeid) throws Exception {
 		StringBuilder tokenUri=new StringBuilder("");
 
@@ -612,4 +557,30 @@ public class ReqClass {
         
         return tokenUri.toString();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
