@@ -614,6 +614,56 @@ public class ReqClass {
 	
 	
 	
+	private String sendPost(URL url, String allFormData) throws Exception {
+		
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		
+		if(Cookie != "")
+			conn.setRequestProperty("Cookie", Cookie);
+
+		conn.setRequestProperty("Upgrade-Insecure-Requests", "1");
+		//setRequestHeaders(conn);
+		
+		conn.setFixedLengthStreamingMode(allFormData.toString().getBytes("UTF-8").length);
+		 
+		conn.setDoOutput(true);
+		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(),"UTF-8");
+		
+		outputStreamWriter.write(allFormData.toString());
+        outputStreamWriter.flush();
+        conn.setInstanceFollowRedirects(false);
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+		
+		int responseCode = conn.getResponseCode();
+		System.out.println("Post Response Code("+ url.getHost()+ ") is : "+ responseCode);
+		
+		
+		if(conn.getHeaderField("Set-Cookie") != null)
+		{
+			Cookie = conn.getHeaderField("Set-Cookie").substring(0,42);
+			System.out.println("Cookie changed to : "+ Cookie);
+			utilityClass.saveCookie(Cookie);
+		}
+		
+		
+		String txt1;
+		String html ="";
+		
+		while((txt1 = in.readLine()) != null) {
+			html += txt1;
+		}
+		
+		if(responseCode == 200)
+			setViewStateAndEValidationToFields(Jsoup.parse(html));
+		
+		if(in != null)
+			in.close();
+		conn.disconnect();
+		
+		return html;
+		
+	}
 	private org.jsoup.nodes.Document sendGet(URL url) throws Exception {
 		
 		
