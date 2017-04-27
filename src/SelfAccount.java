@@ -7,8 +7,13 @@ public class SelfAccount {
 	private static User myUser;
 
 	public void test() throws Exception {
-		//requestConnection.TaideReserveGhaza();
 		requestConnection.nextWeekBtn();
+		
+	}
+	
+	
+	public void showNextWeekGhazas() {
+		
 	}
 	
 	
@@ -18,21 +23,21 @@ public class SelfAccount {
 	
 	
 	
-	
-	
-	
-	private SelfAccount() {
-		requestConnection = new ReqClass(myUser, false);
+	private SelfAccount(User user) {
+		requestConnection = new ReqClass(user);
+		myUser = user;
 	}
 	
 	public static SelfAccount getSelfAccount(User user) throws Exception {
-		myUser = user;
-		return selfAccount;
+		if(selfAccount == null)
+			return new SelfAccount(user);
+		else
+			return selfAccount;
 	}
 	
 	public void printUser() {
 		System.out.println(myUser);
 	}
-	private static SelfAccount selfAccount = new SelfAccount();
+	private static SelfAccount selfAccount;
 	private ReqClass requestConnection;
 }
