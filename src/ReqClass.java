@@ -24,7 +24,6 @@ public class ReqClass {
 
 	private User user;
 	
-	private final String Host = "self.pgu.ac.ir";
 	
 	private String __VIEWSTATE = "";
 	private String __EVENTVALIDATION = "";
@@ -41,22 +40,6 @@ public class ReqClass {
 	public ReqClass(User user){
 		this.user = user;
 	}
-	
-	
-	
-	
-	
-	
-
-	public String getTxtusername() {
-		return this.user.getTxtUsername();
-	}
-
-	public String getTxtpassword() {
-		return this.user.getTxtPassword();
-	}
-	
-	
 	
 	
 	
@@ -84,7 +67,7 @@ public class ReqClass {
 	}
 	
 	
-	public void nextWeekBtn() throws Exception {
+	public void showNextWeekGhazas() throws Exception {
 		
 		getNewCookieIfNotValid();
 		//SendGetToReserve();
@@ -94,145 +77,21 @@ public class ReqClass {
 
 		__EVENTTARGET = "btnnextweek1";
 		String postData = getAllFormDataForSubmitReserve(sendGet(url),false);
+		//sendPost(url,postData);
 		org.jsoup.nodes.Document htmlRes = Jsoup.parse(sendPost(url,postData));
-		if(htmlRes.getElementById("LbMsg") != null)
-			System.out.println(htmlRes.getElementById("D1").text());
+		if(htmlRes.getElementById("LbMsg") != null){
+			String[] splittedDate =
+			htmlRes.getElementById("D1").text().split("/");
+			
+			weekTarikhShanbe = splittedDate[2] + splittedDate[1] + splittedDate[0];
+			System.out.println(weekTarikhShanbe);
+			ghazaList.setGhazasPersianName(weekTarikhShanbe);
+			System.out.println(
+			ghazaList.getAllGhazasPersionName());
+			
+		}
 				
 				
-	}
-	
-	
-	public void TaideReserveGhaza() throws Exception {
-		
-		getNewCookieIfNotValid();
-		//SendGetToReserve();
-
-
-        StringBuilder tokenUri = setFormDataForPostReserve();
-        
-
-        tokenUri.append("&__EVENTTARGET=");
-        tokenUri.append(URLEncoder.encode("","UTF-8"));
-        tokenUri.append("&btn_saveKharid=");
-        tokenUri.append(URLEncoder.encode("تائید", "UTF-8"));
-        
-	    
-        String pguSite = "http://self.pgu.ac.ir/Reserve.aspx";
-		URL url = new URL(pguSite);
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestMethod("POST");
-
-		con.setRequestProperty("Origin", "http://self.pgu.ac.ir");
-		con.setRequestProperty("Upgrade-Insecure-Requests", "1");
-		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		con.setRequestProperty("Referer", "http://self.pgu.ac.ir/reserve.aspx");
-
-		con.setRequestProperty("Cookie", Cookie);
-		
-		
-
-		String data = tokenUri.toString();
-		con.setFixedLengthStreamingMode(data.getBytes("UTF-8").length);
-		con.setDoOutput(true);
-		
-		
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(con.getOutputStream(),"UTF-8");
-		
-		outputStreamWriter.write(data.toString());
-        con.setInstanceFollowRedirects(false);
-        outputStreamWriter.flush();
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-		
-		int responseCode = con.getResponseCode();
-		
-
-		System.out.println("Response Code(POST - /Reserve.aspx) : " + responseCode);
-		
-		try {
-				String inputLine;
-				StringBuffer response1 = new StringBuffer();
-				
-			while ((inputLine = in.readLine()) != null) {
-				response1.append(inputLine);
-			}
-	
-				in.close();
-				org.jsoup.nodes.Document doc = Jsoup.parse(response1.toString());
-
-				System.out.println(doc.getElementById("LbMsg").text());
-		
-			}
-			catch (Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-			}
-		
-	}
-
-	private void submitNextWeekFormTest01(String html) throws Exception {
-
-        StringBuilder tokenUri = setFormDataForPostReserve();
-
-        tokenUri.append("&__EVENTTARGET=");
-        tokenUri.append(URLEncoder.encode("","UTF-8"));
-        tokenUri.append("&btn_saveKharid=");
-        tokenUri.append(URLEncoder.encode("تائید", "UTF-8"));
-
-        tokenUri.setCharAt(tokenUri.indexOf("txtn_numGhaza1")+15, '0');
-        tokenUri.setCharAt(tokenUri.indexOf("txtn_numGhaza2")+15, '0');
-        tokenUri.setCharAt(tokenUri.indexOf("txtn_numGhaza3")+15, '0');
-        tokenUri.setCharAt(tokenUri.indexOf("txtn_numGhaza4")+15, '0');
-        
-        
-        String pguSite = "http://self.pgu.ac.ir/Reserve.aspx";
-		URL url = new URL(pguSite);
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestMethod("POST");
-
-		con.setRequestProperty("Origin", "http://self.pgu.ac.ir");
-		con.setRequestProperty("Upgrade-Insecure-Requests", "1");
-		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		con.setRequestProperty("Referer", "http://self.pgu.ac.ir/reserve.aspx");
-
-		con.setRequestProperty("Cookie", Cookie);
-		
-		
-		
-		con.setFixedLengthStreamingMode(tokenUri.toString().getBytes("UTF-8").length);
- 
-		con.setDoOutput(true);
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(con.getOutputStream(),"UTF-8");
-		
-		outputStreamWriter.write(tokenUri.toString());
-        con.setInstanceFollowRedirects(false);
-        outputStreamWriter.flush();
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-		
-		int responseCode = con.getResponseCode();
-		
-
-		System.out.println("Response Code(POST - /Reserve.aspx NextWeek) : " + responseCode);
-		
-		try {
-				String inputLine;
-				StringBuffer response1 = new StringBuffer();
-				
-			while ((inputLine = in.readLine()) != null) {
-				response1.append(inputLine);
-			}
-	
-				in.close();
-				org.jsoup.nodes.Document doc = Jsoup.parse(response1.toString());
-
-				System.out.println(doc.getElementById("LbMsg").text());
-		
-			}
-			catch (Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-			}
-		
-   
 	}
 	
 	private void getNewCookieIfNotValid() throws Exception {
@@ -273,18 +132,13 @@ public class ReqClass {
 	}
 
 	
-	private void getSelectedGhazas(org.jsoup.nodes.Document document) throws Exception {
-		
-		
-	}
-	
 	private void setViewStateAndEValidationToFields(org.jsoup.nodes.Document doc) throws Exception {
 
 		// Set __VIEWSTATE
 		__VIEWSTATE = doc.getElementById("__VIEWSTATE").val();
 		
-
-		__EVENTVALIDATION = doc.getElementById("__EVENTVALIDATION").val();
+		if(doc.getElementById("__EVENTVALIDATION") != null)
+			__EVENTVALIDATION = doc.getElementById("__EVENTVALIDATION").val();
 	}
 
 	private void setRequestHeaders(HttpURLConnection connection) {
@@ -295,43 +149,6 @@ public class ReqClass {
 		connection.setRequestProperty("Accept-Language", "en-US,en;q=0.8,fa;q=0.6,la;q=0.4");
 	}
 
-	private StringBuilder setFormDataForPostReserve() throws Exception {
-		
-		StringBuilder rEStringBuilder = new StringBuilder();
-
-
-		rEStringBuilder.append("__EVENTARGUMENT=");
-		rEStringBuilder.append(URLEncoder.encode("","UTF-8"));
-        
-
-		rEStringBuilder.append("&__VIEWSTATE=");
-		rEStringBuilder.append(URLEncoder.encode(__VIEWSTATE,"UTF-8"));
-        
-		rEStringBuilder.append("&__VIEWSTATEENCRYPTED=");
-		rEStringBuilder.append(URLEncoder.encode("","UTF-8"));
-
-		rEStringBuilder.append("&__EVENTVALIDATION=");
-		rEStringBuilder.append(URLEncoder.encode(__EVENTVALIDATION,"UTF-8"));
-	    
-		rEStringBuilder.append("&");
-
-        for(Ghaza ghaza : ghazaList.getAllGhazas()) {
-        	//if(ghaza.enable)
-        		rEStringBuilder.append(ghaza.nameId+ "="+ ghaza.value+ "&");
-        }
-
-        rEStringBuilder.append("RD_Self=1");
-        rEStringBuilder.append("&Self=");
-        rEStringBuilder.append(URLEncoder.encode("1", "UTF-8"));
-		
-		return rEStringBuilder;
-	}
-	
-	
-	
-	
-	
-	
 	
 	private String sendPost(URL url, String allFormData) throws Exception {
 		
@@ -493,35 +310,11 @@ public class ReqClass {
         tokenUri.append("&__EVENTVALIDATION=");
         tokenUri.append(URLEncoder.encode(__EVENTVALIDATION,"UTF-8"));
         
-        while(ghazaList.getAllGhazas().size() > 0)
-			ghazaList.getAllGhazas().remove(0);
 		
-		org.jsoup.select.Elements elements = reserveGetResponse.getElementsByTag("input");
-
-		for(Element element : elements) {
-			if(element.attr("name").startsWith("Hid") || element.attr("name").startsWith("Edit") ||
-					element.attr("name").contains("Ghaza"))
-			{
-				Ghaza ghaza = new Ghaza();
-
-				
-				ghaza.nameId = element.attr("name");
-				
-				ghaza.value = element.val();
-				ghaza.description = "#bug1"; // TODO
-				
-				if(!element.attr("disabled").startsWith("disab")  || ghaza.nameId.startsWith("Ghaza"))
-					ghaza.enable = true;
-				
-				ghazaList.addGhaza(ghaza);
-			}
-			
-		}
 		
 		tokenUri.append("&");
-		for(Ghaza ghaza : ghazaList.getAllGhazas()) {
-			tokenUri.append(ghaza.nameId+ "="+ ghaza.value + "&");
-		}
+		// TODO It Can Be False to return just 'enabled Ghazas' + 'Ghaza[SNC][1-7]'
+		tokenUri.append(ghazaList.getGhazasFieldForPostReserve(true));
 
         tokenUri.append("RD_Self=");
         tokenUri.append(URLEncoder.encode("1","UTF-8"));
@@ -535,29 +328,6 @@ public class ReqClass {
         return tokenUri.toString();
 	}
 	
+		
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-}
