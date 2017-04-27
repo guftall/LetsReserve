@@ -703,4 +703,63 @@ public class ReqClass {
         
         return tokenUri.toString();
 	}
+	private String getAllFormDataForSubmitReserve(org.jsoup.nodes.Document reserveGetResponse, boolean setBtn_Taeid) throws Exception {
+		StringBuilder tokenUri=new StringBuilder("");
+
+        tokenUri.append("__EVENTTARGET=");
+        tokenUri.append(URLEncoder.encode(__EVENTTARGET,"UTF-8"));
+
+        tokenUri.append("&__EVENTARGUMENT=");
+        tokenUri.append(URLEncoder.encode("","UTF-8"));
+
+        tokenUri.append("&__VIEWSTATE=");
+        tokenUri.append(URLEncoder.encode(__VIEWSTATE,"UTF-8"));
+        
+        tokenUri.append("&__VIEWSTATEENCRYPTED=");
+        tokenUri.append(URLEncoder.encode("","UTF-8"));
+
+        tokenUri.append("&__EVENTVALIDATION=");
+        tokenUri.append(URLEncoder.encode(__EVENTVALIDATION,"UTF-8"));
+        
+        while(ghazaList.getAllGhazas().size() > 0)
+			ghazaList.getAllGhazas().remove(0);
+		
+		org.jsoup.select.Elements elements = reserveGetResponse.getElementsByTag("input");
+
+		for(Element element : elements) {
+			if(element.attr("name").startsWith("Hid") || element.attr("name").startsWith("Edit") ||
+					element.attr("name").contains("Ghaza"))
+			{
+				Ghaza ghaza = new Ghaza();
+
+				
+				ghaza.nameId = element.attr("name");
+				
+				ghaza.value = element.val();
+				ghaza.description = "#bug1"; // TODO
+				
+				if(!element.attr("disabled").startsWith("disab")  || ghaza.nameId.startsWith("Ghaza"))
+					ghaza.enable = true;
+				
+				ghazaList.addGhaza(ghaza);
+			}
+			
+		}
+		
+		tokenUri.append("&");
+		for(Ghaza ghaza : ghazaList.getAllGhazas()) {
+			tokenUri.append(ghaza.nameId+ "="+ ghaza.value + "&");
+		}
+
+        tokenUri.append("RD_Self=");
+        tokenUri.append(URLEncoder.encode("1","UTF-8"));
+        tokenUri.append("&Self=");
+        tokenUri.append(URLEncoder.encode("1","UTF-8"));
+        if(setBtn_Taeid) {
+	        tokenUri.append("&btn_saveKharid=");
+	        tokenUri.append(URLEncoder.encode("تائید","UTF-8"));
+        }
+        
+        return tokenUri.toString();
+	}
 }
