@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import org.jsoup.Jsoup;
 
 import tools.GhazaList;
+import tools.Log;
 import tools.MyException;
 import tools.User;
 import tools.UtilityClass;
@@ -20,6 +21,7 @@ public class ReqClass {
 	
 	private UtilityClass utilityClass = new UtilityClass();
 	private GhazaList ghazaList = new GhazaList();
+	private Log log = Log.getLog();
 	
 
 	private User user;
@@ -84,10 +86,9 @@ public class ReqClass {
 			htmlRes.getElementById("D1").text().split("/");
 			
 			weekTarikhShanbe = splittedDate[2] + splittedDate[1] + splittedDate[0];
-			System.out.println(weekTarikhShanbe);
+			log.addLog(weekTarikhShanbe);
 			ghazaList.setGhazasPersianName(weekTarikhShanbe);
-			System.out.println(
-			ghazaList.getAllGhazasPersionName());
+			log.addLog(ghazaList.getAllGhazasPersionName());
 			
 		}
 				
@@ -109,7 +110,7 @@ public class ReqClass {
 			
 	        
 			sendPost(new URL("http://self.pgu.ac.ir/login.aspx"), getAllFormDataForLogin());
-			System.out.println("New Cookie is: "+ Cookie);
+			log.addLog("New Cookie is: "+ Cookie);
 			utilityClass.saveCookie(Cookie);
 		}
 		
@@ -122,7 +123,7 @@ public class ReqClass {
 				return true;
 			}
 			else {
-				System.out.println(getRes);
+				log.addLog(getRes.toString());
 				return false;
 			}
 		}catch (MyException e) {
@@ -172,13 +173,13 @@ public class ReqClass {
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 		
 		int responseCode = conn.getResponseCode();
-		System.out.println("Post Response Code("+ url.getHost()+ ") is : "+ responseCode);
+		log.addLog("Post Response Code("+ url.getHost()+ ") is : "+ responseCode);
 		
 		
 		if(conn.getHeaderField("Set-Cookie") != null)
 		{
 			Cookie = conn.getHeaderField("Set-Cookie").substring(0,42);
-			System.out.println("Cookie changed to : "+ Cookie);
+			log.addLog("Cookie changed to : "+ Cookie);
 			utilityClass.saveCookie(Cookie);
 		}
 		
@@ -213,7 +214,7 @@ public class ReqClass {
 
 		int responseCode = conn.getResponseCode();
 
-		System.out.println("GET Response Code("+ url.getHost()+ ") is: "+ responseCode);
+		log.addLog("GET Response Code("+ url.getHost()+ ") is: "+ responseCode);
 		
 		//if(responseCode == 200) {
 		BufferedReader in = new BufferedReader(
