@@ -1,38 +1,15 @@
-import java.awt.FlowLayout;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.beans.Encoder;
+
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.jws.soap.SOAPBinding.Use;
-import javax.lang.model.util.Elements;
-import javax.net.ssl.HttpsURLConnection;
-import javax.sound.sampled.AudioFormat.Encoding;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.text.Document;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 
-import tools.Ghaza;
 import tools.GhazaList;
 import tools.MyException;
 import tools.User;
