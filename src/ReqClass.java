@@ -495,37 +495,9 @@ public class ReqClass {
    
 	}
 	
-	private void saveCookie() {
-		if(Cookie != "" || Cookie != null) {
-		
-			FileWriter fileWriter = null;
-			try {
-				 fileWriter = new FileWriter("D:\\cookiePgu.txt");
-				 fileWriter.write(Cookie);
-				
-			}catch (Exception e) {
-
-			}finally {
-				if(fileWriter != null)
-					try {
-						fileWriter.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-			}
-		}
 		
 	}
 
-	private void readCookie() throws Exception {
-		FileReader fileReader;
-		BufferedReader inBufferedReader = null;
-		try {
-			fileReader = new FileReader("D:\\cookiePgu.txt");
-			
-			inBufferedReader = new BufferedReader(fileReader);
-			
-			Cookie = inBufferedReader.readLine();
 			
 			
 		} catch (FileNotFoundException e) {

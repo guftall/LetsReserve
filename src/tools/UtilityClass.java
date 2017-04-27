@@ -3,6 +3,9 @@ import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -48,6 +51,47 @@ public class UtilityClass implements Runnable {
 		
 	}
 
+
+	public void saveCookie(String cookie) {
+		if(cookie != "" || cookie != null) {
+		
+			FileWriter fileWriter = null;
+			try {
+				 fileWriter = new FileWriter("D:\\cookiePgu.txt");
+				 fileWriter.write(cookie);
+				
+			}catch (Exception e) {
+
+			}finally {
+				if(fileWriter != null)
+					try {
+						fileWriter.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			}
+		}
+		
+	}
+
+	public String readCookie() throws Exception {
+		String cookie = "";
+		FileReader fileReader;
+		BufferedReader inBufferedReader = null;
+		fileReader = new FileReader("D:\\cookiePgu.txt");
+		
+		inBufferedReader = new BufferedReader(fileReader);
+		
+		cookie = inBufferedReader.readLine();
+		
+		if(inBufferedReader != null)
+			inBufferedReader.close();
+		
+		System.out.println("Old Cookie is: "+ cookie);
+		return cookie;
+		
+		
+	}
 
 
 }
