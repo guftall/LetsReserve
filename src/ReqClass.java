@@ -81,153 +81,22 @@ public class ReqClass {
 		return this.user.getTxtPassword();
 	}
 
-	private void sendGetToSelf() throws Exception {
-		
-		URL obj = new URL(selfUrl);
-		HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-		
-		conn.setRequestMethod("GET");
+	public void LoginToSelf() throws Exception {
 
-		setRequestHeaders(conn);
-		
-		conn.setRequestProperty("Host", "self.pgu.ac.ir");
-		
-		int responseCode = conn.getResponseCode();
-		System.out.println("Response Code(GET - self.pgu.ac.ir) is: "+ responseCode);
-		
-		if(responseCode == 200) {
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(conn.getInputStream(), "UTF-8"));
-			
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-			
-			while((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
-			//conn.disconnect();
-			
-			String captchaUrl = response.toString().substring(response.toString().indexOf(
-					"CaptchaImage"), response.toString().indexOf("CaptchaImage")+ 59);
-			
-			
-			// Get image
-			utilityClass.imgUrlToLoad = selfUrl+ captchaUrl;
-			new Thread(utilityClass).start();
-			
-			setViewStateAndEValidationToFields(response.toString());
-			
-
-			this.CaptchaControl1 = getImageCaptcha();
-			
-			utilityClass.frame.setVisible(false);
-			utilityClass.frame.dispose();
-			
-		}
-		
+		getNewCookieIfNotValid();
 	}
 	
-	private void sendPostToSelfPgu() throws Exception {
-	    
-	    StringBuilder tokenUri=new StringBuilder("");
+	private void loadCaptchaImage(String imgUrl) {
 
-        tokenUri.append("__LASTFOCUS=");
-        tokenUri.append(URLEncoder.encode("","UTF-8"));
-
-        tokenUri.append("&__EVENTTARGET=");
-        tokenUri.append(URLEncoder.encode(__EVENTTARGET,"UTF-8"));
-
-        tokenUri.append("&__EVENTARGUMENT=");
-        tokenUri.append(URLEncoder.encode("","UTF-8"));
-        
-
-        tokenUri.append("&__VIEWSTATE=");
-        tokenUri.append(URLEncoder.encode(__VIEWSTATE,"UTF-8"));
-        
-        tokenUri.append("&__VIEWSTATEENCRYPTED=");
-        tokenUri.append(URLEncoder.encode("","UTF-8"));
-
-        tokenUri.append("&__EVENTVALIDATION=");
-        tokenUri.append(URLEncoder.encode(__EVENTVALIDATION,"UTF-8"));
-	    
-        tokenUri.append("&txtusername=");
-        tokenUri.append(URLEncoder.encode("15481","UTF-8"));
-        
-        tokenUri.append("&txtpassword=");
-        tokenUri.append(URLEncoder.encode("17633","UTF-8"));
-
-	    tokenUri.append("&CaptchaControl1=");
-        tokenUri.append(URLEncoder.encode(CaptchaControl1,"UTF-8"));
-
-        tokenUri.append("&btnlogin=");
-        tokenUri.append(URLEncoder.encode("ظˆط±ظˆط¯","UTF-8"));
-
-        /*
-        if(Cookie != "") {
-
-            tokenUri.append("&Cookie=");
-            tokenUri.append(URLEncoder.encode("Nos","UTF-8"));
-        }
- */
-        String pguSite = "http://self.pgu.ac.ir/Login.aspx";
-		URL url = new URL(pguSite);
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestMethod("POST");
+		utilityClass.imgUrlToLoad = imgUrl;
+		new Thread(utilityClass).start();
 		
 		setRequestHeaders(con);
 
-		con.setRequestProperty("Cache-Control", "max-age=0");
-		con.setRequestProperty("Connection", "keep-alive");
-		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		this.CaptchaControl1 = JOptionPane.showInputDialog("Please input Image Numbers: ");
 		
-		con.setRequestProperty("Host", "self.pgu.ac.ir");
-		con.setRequestProperty("Origin", "http://self.pgu.ac.ir");
-		con.setRequestProperty("Referer", "http://self.pgu.ac.ir/login.aspx");
-		con.setRequestProperty("Upgrade-Insecure-Requests", "1");
-		
-		con.setFixedLengthStreamingMode(tokenUri.toString().getBytes("UTF-8").length);
- 
-		con.setDoOutput(true);
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(con.getOutputStream(),"UTF-8");
-		
-		outputStreamWriter.write(tokenUri.toString());
-        outputStreamWriter.flush();
-        con.setInstanceFollowRedirects(false);
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-		
-		int responseCode = con.getResponseCode();
-		
-
-		System.out.println("Response Code(POST - /Login.aspx) : " + responseCode);
-			if(con.getHeaderField("Set-Cookie") != null)
-			{
-				Cookie = con.getHeaderField("Set-Cookie").substring(0,42);
-			}
-			else {
-				System.out.println("server don send any cookie - SendPostToSelf()");
-				try {
-					String inputLine;
-					StringBuffer response = new StringBuffer();
-
-					while ((inputLine = in.readLine()) != null) {
-						response.append(inputLine);
-						}
-					
-					System.out.println(response.toString());
-					
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-			}
-			
-			if(in != null)
-				in.close();
-			if(con != null)
-				con.disconnect();
-		
-
+		utilityClass.frame.setVisible(false);
+		utilityClass.frame.dispose();
 	}
 
 	
@@ -236,61 +105,13 @@ public class ReqClass {
 		getNewCookieIfNotValid();
 		SendGetToReserve();
 		
-		String urlAddre = this.selfUrl + "Reserve.aspx";
-		URL obj = new URL(urlAddre);
-		HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-		
-		setRequestHeaders(conn);
-		
-		conn.setRequestMethod("POST");
+		URL url = new URL(targetUrl);
 
-		conn.setRequestProperty("Origin", "http://self.pgu.ac.ir");
-		conn.setRequestProperty("Upgrade-Insecure-Requests", "1");
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		conn.setRequestProperty("Referer", "http://self.pgu.ac.ir/reserve.aspx");
-
-		conn.setRequestProperty("Cookie", Cookie);
-		
-		
-		StringBuilder tokenUri = setFormDataForPostReserve();
-		
-		tokenUri.append("&__EVENTTARGET=");
-		tokenUri.append(URLEncoder.encode("btnnextweek1", "UTF-8"));
-		
-		
-		conn.setFixedLengthStreamingMode(tokenUri.toString().getBytes("UTF-8").length);
-		
-		
-
-		conn.setDoOutput(true);
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(),"UTF-8");
-		conn.setInstanceFollowRedirects(false);
-		outputStreamWriter.write(tokenUri.toString());
-        outputStreamWriter.flush();
-
-        int responseCode = conn.getResponseCode();
-		
-        
-        //conn.setInstanceFollowRedirects(false);
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-        
-
-		System.out.println("Response Code(POST - NextWeek) : " + responseCode);
-		
-		
-		try {
-				String inputLine;
-				StringBuffer response = new StringBuffer();
-		
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
-				}
-		
-				in.close();
-				setViewStateAndEValidationToFields(response.toString());
-				
-				
-				submitNextWeekFormTest01(response.toString());
+		__EVENTTARGET = "btnnextweek1";
+		String postData = getAllFormDataForSubmitReserve(sendGet(url),false);
+		org.jsoup.nodes.Document htmlRes = Jsoup.parse(sendPost(url,postData));
+		if(htmlRes.getElementById("LbMsg") != null)
+			System.out.println(htmlRes.getElementById("D1").text());
 				
 				
 			}catch (Exception e) {
@@ -508,13 +329,9 @@ public class ReqClass {
 			
 			if(inBufferedReader != null)
 
-	private void getNewCookieIfNotValid() throws Exception {
-		
-		readCookie();
-		if(!CookieIsValid()) {
-			// TODO gozashtane ! dar IF bala
-			sendGetToSelf();
-			sendPostToSelfPgu();
+			
+	        
+			sendPost(new URL("http://self.pgu.ac.ir/login.aspx"), getAllFormDataForLogin());
 			System.out.println("New Cookie is: "+ Cookie);
 			saveCookie();
 		}
@@ -541,30 +358,7 @@ public class ReqClass {
 	
 	private void getSelectedGhazas(org.jsoup.nodes.Document document) throws Exception {
 		
-		while(ghazaList.getAllGhazas().size() > 0)
-			ghazaList.getAllGhazas().remove(0);
 		
-		org.jsoup.select.Elements elements = document.getElementsByTag("input");
-
-		for(Element element : elements) {
-			if(element.attr("name").startsWith("Hid") || element.attr("name").startsWith("Edit") ||
-					element.attr("name").contains("Ghaza"))
-			{
-				Ghaza ghaza = new Ghaza();
-
-				
-				ghaza.nameId = element.attr("name");
-				
-				ghaza.value = element.val();
-				ghaza.description = "#bug1";
-				
-				if(!element.attr("disabled").startsWith("disab")  || ghaza.nameId.startsWith("Ghaza"))
-					ghaza.enable = true;
-				
-				ghazaList.addGhaza(ghaza);
-			}
-			
-		}
 	}
 	
 	private void setViewStateAndEValidationToFields(String string) throws Exception {
