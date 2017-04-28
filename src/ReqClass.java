@@ -88,7 +88,9 @@ public class ReqClass {
 			weekTarikhShanbe = splittedDate[2] + splittedDate[1] + splittedDate[0];
 			log.addLog(weekTarikhShanbe);
 			ghazaList.setGhazasPersianName(weekTarikhShanbe);
+			log.enablePrinting = true;
 			log.addLog(ghazaList.getAllGhazasPersionName());
+			log.enablePrinting = false;
 			
 		}
 				
@@ -316,7 +318,6 @@ public class ReqClass {
 		tokenUri.append("&");
 		// TODO It Can Be False to return just 'enabled Ghazas' + 'Ghaza[SNC][1-7]'
 		tokenUri.append(ghazaList.getGhazasFieldForPostReserve(true));
-
         tokenUri.append("RD_Self=");
         tokenUri.append(URLEncoder.encode("1","UTF-8"));
         tokenUri.append("&Self=");

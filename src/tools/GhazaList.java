@@ -80,7 +80,7 @@ public class GhazaList {
 		
 		Elements elements = getReserveResponse.getElementsByTag("input");
 
-		for(Element element : elements) {
+		for(Element element : elements) { // FIXIT : tedade dovr kheyli ziade
 			String nameId = element.attr("name");
 			for(int i=0; i<105; i++) {
 				if(nameId == ghazas[i].nameId) {

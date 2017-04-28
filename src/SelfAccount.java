@@ -6,12 +6,7 @@ public class SelfAccount {
 	private static User myUser;
 
 	public void test() throws Exception {
-		requestConnection.nextWeekBtn();
-		
-	}
-	
-	
-	public void showNextWeekGhazas() {
+		requestConnection.showNextWeekGhazas();
 		
 	}
 	

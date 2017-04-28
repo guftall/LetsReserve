@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 
 public class UtilityClass implements Runnable {
 
+	private Log log = Log.getLog();
+	
 	public String imgUrlToLoad = "";
 	public String captcha ="";
     public JFrame frame=new JFrame();
@@ -36,7 +38,7 @@ public class UtilityClass implements Runnable {
 			displayImage();
 			}
 			catch (Exception e) {
-				System.out.println(e.getMessage() );
+				log.addLog(e.getMessage() );
 				e.printStackTrace();
 			}
 		
@@ -78,7 +80,7 @@ public class UtilityClass implements Runnable {
 		if(inBufferedReader != null)
 			inBufferedReader.close();
 		
-		System.out.println("Old Cookie is: "+ cookie);
+		log.addLog("Old Cookie is: "+ cookie);
 		return cookie;
 		
 		
